@@ -1,0 +1,60 @@
+C51 COMPILER V9.59.0.0   MOTOR                                                             12/04/2021 23:03:32 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN .\Objects\motor.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE user\motor.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user) DEBUG OBJECTEXTEND 
+                    -PRINT(.\Listings\motor.lst) TABS(2) OBJECT(.\Objects\motor.obj)
+
+line level    source
+
+   1          #include "motor.h"
+   2          
+   3          sbit M1=P2^0;
+   4          sbit M2=P2^1;
+   5          
+   6          void InitMotor(void){
+   7   1        M1=0;
+   8   1        M2=0;
+   9   1      }
+  10          
+  11          void MoveP(int time){
+  12   1        int i=0;
+  13   1        for(;i<time;i++){
+  14   2          M1=1;
+  15   2        }
+  16   1        M1=0;
+  17   1      }
+  18          
+  19          void MoveN(int time){
+  20   1        int i=0;
+  21   1        for(;i<time;i++){
+  22   2          M2=1;
+  23   2        }
+  24   1        M2=0;
+  25   1      }
+  26          
+  27          //PIDµ÷½ÚÆ÷
+  28          int PIDMotor(int err){
+  29   1        static int eI;
+  30   1        static double elast;
+  31   1        int out=AP*err+AI*eI+AD*elast/err;
+  32   1        eI=eI+err;
+  33   1        elast=err;
+  34   1        return out;
+  35   1      } 
+  36            
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    224    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

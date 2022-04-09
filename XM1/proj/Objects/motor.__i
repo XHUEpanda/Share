@@ -1,0 +1,1 @@
+"user\motor.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\user) DEBUG OBJECTEXTEND PRINT(.\Listings\motor.lst) TABS (2) OBJECT(.\Objects\motor.obj)

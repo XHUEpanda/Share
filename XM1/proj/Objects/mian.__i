@@ -1,0 +1,1 @@
+"user\mian.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\user) DEBUG OBJECTEXTEND PRINT(.\Listings\mian.lst) TABS (2) OBJECT(.\Objects\mian.obj)
