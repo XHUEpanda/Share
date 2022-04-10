@@ -1,0 +1,70 @@
+C51 COMPILER V9.59.0.0   MIAN                                                              12/05/2021 10:44:37 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MIAN
+OBJECT MODULE PLACED IN .\Objects\mian.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE user\mian.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user) DEBUG OBJECTEXTEND P
+                    -RINT(.\Listings\mian.lst) TABS(2) OBJECT(.\Objects\mian.obj)
+
+line level    source
+
+   1          #include "main.h"
+   2          
+   3          sbit ALAM=P2^6;
+   4          sbit state=P2^7;//正常运行就会显红色
+   5          
+   6          void main(void){
+   7   1        int nowLen,nowAng,objLen;//nowLen当前的推杆长度，nowAng当前姿态
+   8   1        int timeOutFlag,flagPID;;
+   9   1        ALAM=0;
+  10   1        InitADC();
+  11   1        InitMotor();
+  12   1        InitAng();  
+  13   1        state=0;
+  14   1        while(1){
+  15   2          nowLen=GetLen();//获取当前推杆长度
+  16   2          nowAng=GetAng();//获取当前角度
+  17   2          objLen=GetObjLen(nowAng);//获取目标推杆长度
+  18   2      
+  19   2          flagPID=PIDMotor(nowLen-objLen)/20;
+  20   2          printf("error:%d",nowLen);
+  21   2          if(flagPID>100||flagPID<-100){
+  22   3            if(nowLen-objLen>LENERROR){ //如果当前长度大于目标长度
+  23   4              //MoveN(PIDMotor(10)); PID调节器
+  24   4              MoveN(10);
+  25   4              timeOutFlag++;
+  26   4            }
+  27   3      
+  28   3            if(objLen-nowLen>LENERROR){ //如果当前长度小于目标长度
+  29   4              //MoveP(PIDMotor(10));
+  30   4              MoveP(10);
+  31   4              timeOutFlag++;
+  32   4            }
+  33   3            
+  34   3            if(objLen-nowLen<LENERROR&&nowLen-objLen<LENERROR){
+  35   4              timeOutFlag=0;
+  36   4            }
+  37   3          }
+  38   2          
+  39   2          if(timeOutFlag>=TIMEOUT){//如果误差依旧过大
+  40   3            ALAM=1;
+  41   3          }
+  42   2          state=~state;
+  43   2        }
+  44   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    239    ----
+   CONSTANT SIZE    =      9    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.59.0.0   MIAN                                                              12/05/2021 10:44:37 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

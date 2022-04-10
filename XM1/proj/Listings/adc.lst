@@ -1,0 +1,72 @@
+C51 COMPILER V9.59.0.0   ADC                                                               12/05/2021 10:46:43 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE ADC
+OBJECT MODULE PLACED IN .\Objects\adc.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE user\adc.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user) DEBUG OBJECTEXTEND PR
+                    -INT(.\Listings\adc.lst) TABS(2) OBJECT(.\Objects\adc.obj)
+
+line level    source
+
+   1          #include "adc.h"
+   2          
+   3          sbit ADC_CS=P2^2;
+   4          sbit ADC_RD=P2^3;
+   5          sbit ADC_WR=P2^4;
+   6          sbit ADC_INTR=P2^5;
+   7          
+   8          int MapAng[5]={6279,10968,15624,20244,24804};
+   9          
+  10          void InitADC(void){
+  11   1        ADC_CS=0;
+  12   1        ADC_RD=1;
+  13   1        ADC_WR=1;//不启动芯片采集
+  14   1      }
+  15          
+  16          //读取传感器电压输出是mv
+  17          int GetADC(void){
+  18   1        int v;
+  19   1        ADC_WR=0;//启动电压采集
+  20   1        _nop_();
+  21   1        ADC_WR=1;//触发电压转换
+  22   1        while(ADC_INTR); //电压转换完成后INTR=0
+  23   1        ADC_RD=0;
+  24   1        v=P1;//读取电压数据
+  25   1        ADC_RD=1;
+  26   1        return (int)(v*19.607);
+  27   1      }
+  28          
+  29          //输出是当前推杆长度单位10^-2mm
+  30          int GetLen(void){
+  31   1        int v;
+  32   1        v=GetADC();
+  33   1        v=(int)((25000.0)*(v-VOTL)/(VOTH-VOTL));
+  34   1        return v;
+  35   1      }
+  36          
+  37          //得到目标的长度 ang:度 
+  38          int GetObjLen(int ang){
+  39   1        if(ang<3) return 0;
+  40   1        if(ang<5) return MapAng[0];
+  41   1        if(ang<8) return MapAng[1];
+  42   1        if(ang<11) return MapAng[2];
+  43   1        if(ang<14) return MapAng[3];
+  44   1        if(ang<17) return MapAng[4];
+  45   1        return 0;
+  46   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    181    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     10    ----
+C51 COMPILER V9.59.0.0   ADC                                                               12/05/2021 10:46:43 PAGE 2   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
